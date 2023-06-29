@@ -1,6 +1,6 @@
 use std::{env::args, io, path::PathBuf};
 use tracing::error;
-use waysight::{state::CONFIG, UserData, USER_DATA};
+use waysight::{backend, state::CONFIG, UserData, USER_DATA};
 
 fn print_usage() {
     let usage_str = "Waysight, the insightful wayland compositor
@@ -73,5 +73,5 @@ fn main() {
         parse_args(args, &mut mutex_data);
     }
     drop(mutex_data);
-    tracing::debug!("keyboard layout: {}", CONFIG.input.keyboard_layout)
+    backend::backend_autoinit();
 }

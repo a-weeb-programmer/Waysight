@@ -1,3 +1,3 @@
-mod compositor;
-mod seat;
-mod input;
+pub mod compositor;
+pub mod input;
+pub mod seat;

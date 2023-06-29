@@ -31,8 +31,8 @@ pub static CONFIG: Lazy<WaysightConfig> = Lazy::from_generator(WaysightConfig::l
 
 // Our loop data
 pub struct CalloopData<B: Backend + 'static> {
-    display: Display<Waysight<B>>,
-    state: Waysight<B>,
+    pub display: Display<Waysight<B>>,
+    pub state: Waysight<B>,
 }
 
 // Base struct for storing any wayland globals and handling requests
@@ -42,7 +42,7 @@ pub struct Waysight<B: Backend + 'static> {
     pub compositor: CompositorState,
     pub loop_handle: LoopHandle<'static, CalloopData<B>>,
     pub loop_signal: LoopSignal,
-    pub xdg_shell_state: XdgShellState,
+    // pub xdg_shell_state: XdgShellState,
     pub shm_state: ShmState,
     pub seat_state: SeatState<Self>,
     pub seat_name: String,
@@ -104,12 +104,12 @@ fn init_wl_socket<B: Backend + 'static>(
 
 impl<B: Backend + 'static> Waysight<B> {
     pub fn new(
-        event_loop: EventLoop<'static, CalloopData<B>>,
+        event_loop: &EventLoop<'static, CalloopData<B>>,
         display: &mut Display<Self>,
         backend_data: B,
-    ) {
+    ) -> Self {
         let display_handle = display.handle().clone();
-        let socket_name = init_wl_socket(&event_loop.handle(), display);
+        let socket_name = init_wl_socket(&event_loop.handle(), display).unwrap();
         let loop_handle = event_loop.handle();
         let loop_signal = event_loop.get_signal();
 
@@ -122,6 +122,22 @@ impl<B: Backend + 'static> Waysight<B> {
 
         let output_state = OutputManagerState::new_with_xdg_output::<Self>(&display_handle);
         let cursor_image_status = Arc::new(Mutex::new(CursorImageStatus::Default));
+
+        let output_state = OutputManagerState::new_with_xdg_output::<Self>(&display_handle);
+
+        Waysight {
+            display_handle,
+            cursor_image_status,
+            compositor,
+            loop_handle,
+            loop_signal,
+            shm_state,
+            seat_state,
+            seat_name,
+            seat,
+            socket_name,
+            output_state,
+        }
     }
 }
 

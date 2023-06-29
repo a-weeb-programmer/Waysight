@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-smithay = { git = "https://github.com/Smithay/smithay.git" }
+smithay = { git = "https://github.com/Smithay/smithay.git", features = ["renderer_glow", "renderer_gl", "backend_udev", "backend_drm", "backend_winit",
+        "backend_session", "backend_egl", "backend_libinput"]}
 smithay-drm-extras = { git = "https://github.com/Smithay/smithay.git" }
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.17", features = ["std", "env-filter"]}
