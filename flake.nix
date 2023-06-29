@@ -18,7 +18,8 @@
           wayland-protocols
           libseat
           libinput
-
+          mesa
+          libxkbcommon
         ];
       };
 

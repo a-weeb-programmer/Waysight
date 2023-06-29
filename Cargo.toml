@@ -9,3 +9,8 @@ edition = "2021"
 smithay = { git = "https://github.com/Smithay/smithay.git" }
 smithay-drm-extras = { git = "https://github.com/Smithay/smithay.git" }
 tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.17", features = ["std", "env-filter"]}
+thiserror = "1.0.40"
+toml = "0.7.4"
+serde = { version = "1.0.164", features = ["derive"]}
+static_init = "1.0.3"
