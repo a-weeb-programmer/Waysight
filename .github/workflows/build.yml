@@ -19,7 +19,7 @@ jobs:
           components: rustfmt, clippy
 
       - name: Install dependencies
-        run: sudo apt update && sudo apt install wayland-protocols libwayland-dev libglvnd-dev libseat-dev libgbm-dev libinput-dev libudev-dev libsystemd-dev pkg-config
+        run: sudo apt update && sudo apt install wayland-protocols libwayland-dev libglvnd-dev libseat-dev libgbm-dev libinput-dev libudev-dev libsystemd-dev pkg-config libxkbcommon-dev
 
       - name: Build
         uses: actions-rs/cargo@v1
