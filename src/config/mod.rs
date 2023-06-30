@@ -21,6 +21,8 @@ pub struct WaysightConfig {
 pub struct InputConfig {
     #[serde(default = "default_layout")]
     pub keyboard_layout: String,
+    #[serde(default = "default_variant")]
+    pub layout_variant: String,
 }
 
 #[derive(Error, Debug)]
@@ -91,6 +93,7 @@ pub fn generate_config(user_path: Option<PathBuf>) -> Result<PathBuf, ConfigErro
 
     let input_config = InputConfig {
         keyboard_layout: "us".to_owned(),
+        layout_variant: "".to_owned(),
     };
 
     let config = WaysightConfig {
@@ -146,4 +149,8 @@ pub fn default_layout() -> String {
 
 pub fn default_num_workspaces() -> u32 {
     10
+}
+
+fn default_variant() -> String {
+    "".to_owned()
 }

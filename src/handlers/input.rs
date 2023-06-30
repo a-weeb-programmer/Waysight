@@ -4,13 +4,13 @@ use smithay::{
         libinput::LibinputInputBackend,
         winit::WinitInput,
     },
-    input::keyboard::{FilterResult, KeysymHandle, ModifiersState, XkbConfig},
-    utils::{SerialCounter, SERIAL_COUNTER},
+    input::keyboard::{keysyms, FilterResult, KeysymHandle, ModifiersState, XkbConfig},
+    utils::SERIAL_COUNTER,
 };
 
 use crate::{
     backend::{drm::DrmBackend, winit::WinitBackend},
-    state::{Backend, Waysight, CONFIG},
+    state::{Waysight, CONFIG},
 };
 
 impl Waysight<DrmBackend> {
@@ -20,6 +20,7 @@ impl Waysight<DrmBackend> {
                 if Device::has_capability(&device, DeviceCapability::Keyboard) {
                     let xkb_config = XkbConfig {
                         layout: &CONFIG.input.keyboard_layout,
+                        variant: &CONFIG.input.layout_variant,
                         ..XkbConfig::default()
                     };
                     self.seat
@@ -39,7 +40,12 @@ impl Waysight<DrmBackend> {
                     KeyState::Pressed,
                     SERIAL_COUNTER.next_serial(),
                     Event::time_msec(&event),
-                    |state, modifier_state, key_code| FilterResult::<i32>::Forward,
+                    |state, modifier_state, key_code| {
+                        if modifier_state.alt && key_code.modified_sym() == keysyms::KEY_e {
+                            state.loop_signal.stop();
+                        }
+                        FilterResult::<i32>::Forward
+                    },
                 );
             }
             _ => {}
@@ -53,6 +59,9 @@ impl Waysight<WinitBackend> {
         modifier_state: &ModifiersState,
         keysym: KeysymHandle<'_>,
     ) -> FilterResult<T> {
+        if modifier_state.alt && keysym.modified_sym() == keysyms::KEY_o {
+            self.loop_signal.stop();
+        }
         FilterResult::Forward
     }
     pub fn parse_input_event_winit(&mut self, event: InputEvent<WinitInput>) {
@@ -61,6 +70,7 @@ impl Waysight<WinitBackend> {
                 if Device::has_capability(&device, DeviceCapability::Keyboard) {
                     let xkb_config = XkbConfig {
                         layout: &CONFIG.input.keyboard_layout,
+                        variant: &CONFIG.input.layout_variant,
                         ..XkbConfig::default()
                     };
                     self.seat
